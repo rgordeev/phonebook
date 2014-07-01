@@ -22,7 +22,18 @@ public class DBModule extends AbstractModule
     @Override
     protected void configure()
     {
-        bind(StorageService.class).to(JDBCStorageService.class);
+        /**
+         * {@link StorageService} имеет три реализации, а именно
+         * {@link InMemoryStorage} - хранилище в памяти
+         * {@link JDBCStorageService} - хранилище в БД с взаимодействием посредством jdbc
+         * {@link HibernateStorageService} - хранилище в БД с взаимодействием посредством hibernate
+         * Т.о. любой из вышеперечисленных классов может быть указан для инжектинга
+         * guice в зависимые объекты.
+         *
+         * В {@link configs.DBConnection} можно найти настройки соединения с БД для каждого из
+         * сервисов, зависящих от БД.
+         */
+        bind(StorageService.class).to(HibernateStorageService.class);
     }
 
     @Provides
