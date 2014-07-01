@@ -38,6 +38,19 @@ public class JDBCStorageService implements StorageService
         return TransactionScript.getInstance().defaultBook();
     }
 
+    @Override
+    public void close()
+    {
+        try
+        {
+            TransactionScript.getInstance().close();
+        }
+        catch (SQLException e)
+        {
+            e.printStackTrace();
+        }
+    }
+
     public static final class TransactionScript
     {
         private static final TransactionScript instance = new TransactionScript();
@@ -108,7 +121,7 @@ public class JDBCStorageService implements StorageService
                 PreparedStatement addPerson = connection.prepareStatement("insert into person (book_id, name) values (?, ?)", Statement.RETURN_GENERATED_KEYS);
                 PreparedStatement addPhone  = connection.prepareStatement("insert into phone (person_id, phone) values (?, ?)", Statement.RETURN_GENERATED_KEYS);
 
-                addPerson.setLong   (1, book.getId());
+                addPerson.setLong(1, book.getId());
                 addPerson.setString (2, person);
 
                 addPerson.execute();
@@ -156,6 +169,12 @@ public class JDBCStorageService implements StorageService
 
             // возвращаем проинициализированный или пустой объект книги
             return book;
+        }
+
+        public void close() throws SQLException
+        {
+            if (connection != null && !connection.isClosed())
+                connection.close();
         }
 
         private Connection connection;

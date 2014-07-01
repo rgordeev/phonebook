@@ -45,5 +45,11 @@ public class InMemoryStorage implements StorageService
         return book == null ? book = new Book() : book;
     }
 
+    @Override
+    public void close()
+    {
+        book = null;
+    }
+
     private Book book;
 }

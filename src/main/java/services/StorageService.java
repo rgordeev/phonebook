@@ -17,4 +17,6 @@ public interface StorageService
     List<Person> list();
 
     Book defaultBook();
+
+    void close();
 }

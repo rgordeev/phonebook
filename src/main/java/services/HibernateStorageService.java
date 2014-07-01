@@ -55,6 +55,11 @@ public class HibernateStorageService implements StorageService
         return books.get(0);
     }
 
+    @Override
+    public void close()
+    {
+        manager.getEntityManagerFactory().close();
+    }
 
     private EntityManager manager;
 }
