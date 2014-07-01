@@ -10,7 +10,7 @@ import model.Book;
  */
 public interface Command
 {
-    void execute(Book model, ApplicationContext ap);
+    void execute(ApplicationContext ap);
 
     String getName();
 }

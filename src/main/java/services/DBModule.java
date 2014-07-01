@@ -22,7 +22,7 @@ public class DBModule extends AbstractModule
     @Override
     protected void configure()
     {
-        bind(StorageService.class).to(HibernateStorageService.class);
+        bind(StorageService.class).to(JDBCStorageService.class);
     }
 
     @Provides

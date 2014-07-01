@@ -1,9 +1,11 @@
 package services;
 
+import com.google.inject.Singleton;
 import configs.DBConnection;
 import model.Book;
 import model.Person;
 import model.Phone;
+import org.apache.commons.lang3.StringUtils;
 
 
 import java.sql.*;
@@ -15,17 +17,25 @@ import java.util.List;
  * <p/>
  * 2014 июн 18
  */
+@Singleton
 public class JDBCStorageService implements StorageService
 {
     @Override
-    public void add(String personName, String phone, Book book)
+    public void add(String personName, String phone)
     {
-        TransactionScript.getInstance().addPerson(personName, phone);
+        TransactionScript.getInstance().addPerson(personName, phone, defaultBook());
     }
 
     @Override
-    public List<Person> list(Book book) {
-        return TransactionScript.getInstance().listPersons("1");
+    public List<Person> list()
+    {
+        return TransactionScript.getInstance().listPersons();
+    }
+
+    @Override
+    public Book defaultBook()
+    {
+        return TransactionScript.getInstance().defaultBook();
     }
 
     public static final class TransactionScript
@@ -52,7 +62,7 @@ public class JDBCStorageService implements StorageService
             };
         }
 
-        public List<Person> listPersons(String book_id)
+        public List<Person> listPersons()
         {
             List<Person> result = new ArrayList<>(10);
 
@@ -61,10 +71,7 @@ public class JDBCStorageService implements StorageService
                 PreparedStatement statement = connection.prepareStatement(
                         "select name, phone from book b \n" +
                         "inner join person p on b.id = p.book_id \n" +
-                        "inner join phone ph on p.id = ph.person_id\n" +
-                        "where b.id = ?");
-
-                statement.setInt(1, Integer.valueOf(book_id));
+                        "inner join phone ph on p.id = ph.person_id\n");
 
                 ResultSet r_set = statement.executeQuery();
 
@@ -84,15 +91,26 @@ public class JDBCStorageService implements StorageService
             return result;
         }
 
-        public void addPerson(String person, String phone)
+        public void addPerson(String person, String phone, Book book)
         {
             try
             {
+                if (book.getId() == null)
+                {
+                    PreparedStatement addBook = connection.prepareStatement("insert into book (id) values (DEFAULT)", Statement.RETURN_GENERATED_KEYS);
+                    addBook.execute();
+                    ResultSet generated_book_id = addBook.getGeneratedKeys();
+
+                    if (generated_book_id.next())
+                        book.setId(generated_book_id.getLong("id"));
+                }
+
                 PreparedStatement addPerson = connection.prepareStatement("insert into person (book_id, name) values (?, ?)", Statement.RETURN_GENERATED_KEYS);
                 PreparedStatement addPhone  = connection.prepareStatement("insert into phone (person_id, phone) values (?, ?)", Statement.RETURN_GENERATED_KEYS);
 
-                addPerson.setInt(1, 1);
-                addPerson.setString(2, person);
+                addPerson.setLong   (1, book.getId());
+                addPerson.setString (2, person);
+
                 addPerson.execute();
 
                 ResultSet auto_pk = addPerson.getGeneratedKeys();
@@ -111,6 +129,33 @@ public class JDBCStorageService implements StorageService
             {
                 e.printStackTrace();
             }
+        }
+
+        public Book defaultBook()
+        {
+            // создаем новый экземпляр, который в дальнейшем и сохраним,
+            // если не найдем для него записи в БД
+            Book book = new Book();
+
+            try
+            {
+                Statement statement = connection.createStatement();
+                // выбираем из таблицы book единственную запись
+                ResultSet books = statement.executeQuery("select id from book limit 1");
+                // если хоть одна зепись в таблице нашлась, инициализируем наш объект полученными значениями
+                if (books.next())
+                {
+                    book.setId(books.getLong("id"));
+                }
+
+            }
+            catch (SQLException e)
+            {
+                e.printStackTrace();
+            }
+
+            // возвращаем проинициализированный или пустой объект книги
+            return book;
         }
 
         private Connection connection;

@@ -1,9 +1,7 @@
 package services;
 
-import controllers.CommandLineController;
-import controllers.SimpleCommandLineController;
+import com.google.inject.Singleton;
 import model.Book;
-import model.Params;
 import model.Person;
 import model.Phone;
 
@@ -17,10 +15,11 @@ import java.util.List;
  * <p/>
  * 2014 июн 18
  */
+@Singleton
 public class InMemoryStorage implements StorageService
 {
     @Override
-    public void add(String personName, String phone, Book book)
+    public void add(String personName, String phone)
     {
         Person person = new Person(personName);
 
@@ -29,7 +28,7 @@ public class InMemoryStorage implements StorageService
     }
 
     @Override
-    public List<Person> list(Book book)
+    public List<Person> list()
     {
         List<Person> copy = new ArrayList<Person>(book.getPersons());
         Collections.sort(copy, new Comparator<Person>() {
@@ -40,4 +39,11 @@ public class InMemoryStorage implements StorageService
         });
         return copy;
     }
+
+    public Book defaultBook()
+    {
+        return book == null ? book = new Book() : book;
+    }
+
+    private Book book;
 }

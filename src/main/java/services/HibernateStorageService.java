@@ -1,6 +1,7 @@
 package services;
 
 import com.google.inject.Inject;
+import com.google.inject.Singleton;
 import model.Book;
 import model.Person;
 import model.Phone;
@@ -13,6 +14,7 @@ import java.util.List;
  * <p/>
  * 2014 июн 25
  */
+@Singleton
 public class HibernateStorageService implements StorageService
 {
     @Inject
@@ -22,8 +24,9 @@ public class HibernateStorageService implements StorageService
     }
 
     @Override
-    public void add(String personName, String phone, Book book)
+    public void add(String personName, String phone)
     {
+        Book   book   = defaultBook();
         Person person = new Person(personName);
         Phone  ph     = new Phone(person, phone);
         person.getPhones().add(ph);
@@ -40,9 +43,18 @@ public class HibernateStorageService implements StorageService
     }
 
     @Override
-    public List<Person> list(Book book) {
+    public List<Person> list() {
         return manager.createQuery("select p from model.Person p").getResultList();
     }
+
+    public Book defaultBook()
+    {
+        List<Book> books = manager.createQuery("from model.Book").setMaxResults(1).getResultList();
+        if (books.isEmpty())
+            return new Book();
+        return books.get(0);
+    }
+
 
     private EntityManager manager;
 }
