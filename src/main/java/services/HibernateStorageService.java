@@ -8,6 +8,7 @@ import model.Phone;
 
 import javax.persistence.EntityManager;
 import java.util.List;
+import java.util.Set;
 
 /**
  * (c) Roman Gordeev
@@ -42,6 +43,58 @@ public class HibernateStorageService implements StorageService
 
     }
 
+    @Override
+    public void updateName(String oldName, String newName)
+    {
+        long id = getPersonId(oldName);
+        if(id != -1)
+        {
+            manager.getTransaction().begin();
+            Person personToChange = manager.find(Person.class, id);
+            personToChange.setName(newName); //changed inside transaction
+            manager.getTransaction().commit();
+        }
+    }
+
+    @Override
+    public void updatePhone(String personName, String newPhone)
+    {
+        long id = getPersonId(personName);
+        if(id != -1)
+        {
+            manager.getTransaction().begin();
+            Person personToChange = manager.find(Person.class, id);
+            Phone phoneToChange = personToChange.getPhones().iterator().next();
+            phoneToChange.setPhone(newPhone);
+            manager.getTransaction().commit();
+        }
+    }
+
+    @Override
+    public void delete(String personName)
+    {
+        long id = getPersonId(personName);
+        if(id != -1)
+        {
+            manager.getTransaction().begin();
+            Person personToDelete = manager.find(Person.class, id);
+            manager.remove(personToDelete); //remove operation is cascaded to phones
+            manager.getTransaction().commit();
+        }
+    }
+    private long getPersonId(String personName)
+    {
+        Book book = defaultBook();
+        Set<Person> persons = book.getPersons();
+        for (Person p: persons)
+        {
+            if(p.getName().equalsIgnoreCase(personName))
+            {
+                return  p.getId();
+            }
+        }
+        return -1;
+    }
     @Override
     public List<Person> list() {
         return manager.createQuery("select p from model.Person p").getResultList();

@@ -13,6 +13,9 @@ import java.util.List;
 public interface StorageService
 {
     void add(String personName, String phone);
+    void updateName(String oldName, String newName);
+    void updatePhone(String personName, String newPhone);
+    void delete(String personName);
 
     List<Person> list();
 
