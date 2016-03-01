@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en-us">
+  <head>
+    <meta charset="UTF-8">
+    <title>Phonebook by rgordeev</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" type="text/css" href="stylesheets/normalize.css" media="screen">
+    <link href='https://fonts.googleapis.com/css?family=Open+Sans:400,700' rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" type="text/css" href="stylesheets/stylesheet.css" media="screen">
+    <link rel="stylesheet" type="text/css" href="stylesheets/github-light.css" media="screen">
+  </head>
+  <body>
+    <section class="page-header">
+      <h1 class="project-name">Phonebook</h1>
+      <h2 class="project-tagline">java/groovy project</h2>
+      <a href="https://github.com/rgordeev/phonebook" class="btn">View on GitHub</a>
+      <a href="https://github.com/rgordeev/phonebook/zipball/master" class="btn">Download .zip</a>
+      <a href="https://github.com/rgordeev/phonebook/tarball/master" class="btn">Download .tar.gz</a>
+    </section>
+
+    <section class="main-content">
+      <h1>
+<a id="Архитектура" class="anchor" href="#%D0%90%D1%80%D1%85%D0%B8%D1%82%D0%B5%D0%BA%D1%82%D1%83%D1%80%D0%B0" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Архитектура</h1>
+
+<p>Требуется подумать над архитектурой учебного проекта, а именно подумать, какие варианты использования могут быть у этого приложения, какие действия и в какой последовательности будут выполняться в каждом из вариантов использования, как эти действия могут быть отражены в объектной модели нашего приложения.</p>
+
+<p>Для лучшего понимания проектирования рекомендую ознакомиться с кратким обзором <a href="http://habrahabr.ru/post/210288/">паттернов проектирования</a> и <a href="http://www.books.ru/books/priemy-obektno-orientirovannogo-proektirovaniya-patterny-proektirovaniya-8451/?show=1">книгой</a> для более детального изучения.</p>
+
+<h1>
+<a id="git" class="anchor" href="#git" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Git</h1>
+
+<p>Кроме того, необходимо ознакомиться с этими двумя статьями: <a href="http://habrahabr.ru/post/123111/">статья 1</a> и <a href="http://dev-lab.info/2013/08/%D1%88%D0%BF%D0%B0%D1%80%D0%B3%D0%B0%D0%BB%D0%BA%D0%B0-%D0%BF%D0%BE-git-%D0%BE%D1%81%D0%BD%D0%BE%D0%B2%D0%BD%D1%8B%D0%B5-%D0%BA%D0%BE%D0%BC%D0%B0%D0%BD%D0%B4%D1%8B-%D1%81%D0%BB%D0%B8%D1%8F%D0%BD/">статья 2</a>, а также с <a href="http://habrahabr.ru/post/169743/">интерактивной обучалкой по git</a>, и сделать отдельную ветку от текущего проекта в своем форке, а затем слить сделанные в ветке изменения с основным бранчем.</p>
+
+<p>По шагам это будет выглядеть следующим образом:</p>
+
+<ol>
+<li><p>Переходим по адресу нашего проекта <a href="https://github.com/rgordeev/phonebook">тут</a></p></li>
+<li><p>Копируем ссылку из поля HTTPS clone URL</p></li>
+<li><p>Открываем окно терминала и в директории, где хранятся наши проекты, выполняем команду 
+<code>git clone https://github.com/rgordeev/phonebook.git</code>  </p></li>
+<li><p>Затем опять переходим на страницу проекта на <a href="https://github.com/rgordeev/phonebook">github</a> и делаем форк, нажав на кнопку в правом верхнем углу (для этого требуется регистрация на github)</p></li>
+<li><p>Переходим в терминале в директорию в которую мы склонировали проект и выполняем в нем команду
+<code>git remote add &lt;произвольный алиас, например myrepo&gt; &lt;url адрес форка, расположенного уже на своей странице&gt;</code></p></li>
+<li><p>Выполняем команду <code>git remote -v</code> чтобы убедиться, что все было корректно добавлено. Должны будем увидеть нечто, похожее на
+<code>origin  https://github.com/rgordeev/phonebook.git
+&lt;указанный алиас, например myrepo&gt;  git://github.com/&lt;имя выбранное Вами при регистрации на github&gt;/phonebook.git</code></p></li>
+</ol>
+
+<p>Для более детального ознакомления с git советую почитать <a href="http://git-scm.com/book/ru">книгу</a> </p>
+
+<p>Соответственно задание по git заключается в </p>
+
+<ol>
+<li><p>Создании дополнительной ветки в клонированном репозитории</p></li>
+<li><p>Внесении произвольных изменений в код проекта</p></li>
+<li><p>Коммите этих изменений в ветку</p></li>
+<li><p>Слиянии ветки с основным бранчем master.</p></li>
+</ol>
+
+<h1>
+<a id="gradle" class="anchor" href="#gradle" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Gradle</h1>
+
+<p>В задании по Gradle требуется в текущий проект добавить зависимость от библиотеки <a href="http://commons.apache.org/proper/commons-lang/">Apache commons lang</a> и реализовать медот equals класса Person, используя статический медот StringUtils.equals(str1, str2) класса StringUtils из добавленной библиотеки.</p>
+
+      <footer class="site-footer">
+        <span class="site-footer-owner"><a href="https://github.com/rgordeev/phonebook">Phonebook</a> is maintained by <a href="https://github.com/rgordeev">rgordeev</a>.</span>
+
+        <span class="site-footer-credits">This page was generated by <a href="https://pages.github.com">GitHub Pages</a> using the <a href="https://github.com/jasonlong/cayman-theme">Cayman theme</a> by <a href="https://twitter.com/jasonlong">Jason Long</a>.</span>
+      </footer>
+
+    </section>
+
+  
+  </body>
+</html>
