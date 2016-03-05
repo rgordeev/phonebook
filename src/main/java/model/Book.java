@@ -13,7 +13,7 @@ import java.util.Set;
 public class Book {
 
     public Book() {
-        persons = new HashSet<>();
+        persons = new HashSet<Person>();
     }
 
     public Book(Set<Person> persons) {
