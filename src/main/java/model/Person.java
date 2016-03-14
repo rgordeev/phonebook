@@ -71,6 +71,4 @@ public class Person
     private Long id;
     private String name;
     private Set<Phone> phones;
-    //private String lastname;
-
 }

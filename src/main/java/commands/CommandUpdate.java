@@ -29,7 +29,7 @@ public class CommandUpdate extends AbstractCommand {
             getStorage().updatePerson(personName, newInfo);
             System.out.println(personName + " name was changed to " + newInfo);
         }
-        else if(oldInfo.equalsIgnoreCase("phone"))
+        else if(oldInfo.equals("phone"))
         {
             getStorage().updatePhone(personName, newInfo);
             System.out.println(personName + " phone was changed to " + newInfo);
