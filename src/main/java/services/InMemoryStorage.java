@@ -5,10 +5,7 @@ import model.Book;
 import model.Person;
 import model.Phone;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.List;
+import java.util.*;
 
 /**
  * (c) Roman Gordeev
@@ -38,6 +35,45 @@ public class InMemoryStorage implements StorageService
             }
         });
         return copy;
+    }
+
+    @Override
+    public void delete(String personName)
+    {
+        Set<Person> personList = defaultBook().getPersons();
+        for (Person person: personList)
+        {
+            personList.remove(person);
+            break;
+        }
+    }
+
+    @Override
+    public void updatePerson(String personName, String newName)
+    {
+        Set<Person> persons = defaultBook().getPersons();
+        for(Person person: persons)
+        {
+            if(person.getName().equals(personName))
+            {
+                person.setName(newName);
+                break;
+            }
+        }
+    }
+
+    @Override
+    public  void updatePhone(String personName, String newName)
+    {
+        Set<Person> persons = defaultBook().getPersons();
+        for(Person person: persons)
+        {
+            if(person.getName().equals(personName))
+            {
+                person.getPhones().clear();
+                person.getPhones().add(new Phone(person,newName));
+            }
+        }
     }
 
     public Book defaultBook()

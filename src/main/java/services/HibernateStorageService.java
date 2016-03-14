@@ -8,6 +8,7 @@ import model.Phone;
 
 import javax.persistence.EntityManager;
 import java.util.List;
+import java.util.Set;
 
 /**
  * (c) Roman Gordeev
@@ -53,6 +54,58 @@ public class HibernateStorageService implements StorageService
         if (books.isEmpty())
             return new Book();
         return books.get(0);
+    }
+
+    @Override
+    public void delete(String personName)
+    {
+        long id = getPersonId(personName);
+        if (id !=-1)
+        {
+            manager.getTransaction().begin();
+            Person delPerson = manager.find(Person.class, id);
+            manager.remove(delPerson);
+            manager.getTransaction().commit();
+        }
+    }
+
+    @Override
+    public  void updatePerson(String personName, String newName)
+    {
+        long id = getPersonId(personName);
+        if (id !=-1)
+        {
+            manager.getTransaction().begin();
+            Person changePerson = manager.find(Person.class, id);
+            changePerson.setName(newName);
+            manager.getTransaction().commit();
+        }
+    }
+
+    @Override
+    public  void updatePhone(String personName, String newPhone)
+    {
+        long id = getPersonId(personName);
+        if(id!=-1)
+        {
+            manager.getTransaction().begin();
+            Person changePerson = manager.find(Person.class, id);
+            Phone changePhone = changePerson.getPhones().iterator().next();
+            changePhone.setPhone(newPhone);
+            manager.getTransaction().commit();
+        }
+    }
+
+    private long getPersonId(String personName)
+    {
+        Book book = defaultBook();
+        Set<Person> personList = book.getPersons();
+        for (Person person: personList)
+        {
+            if(person.getName().equals(personName))
+                return  person.getId();
+        }
+        return -1;
     }
 
     @Override
