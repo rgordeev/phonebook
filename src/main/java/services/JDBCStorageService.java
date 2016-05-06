@@ -27,6 +27,24 @@ public class JDBCStorageService implements StorageService
     }
 
     @Override
+    public void updateName(String oldName, String newName)
+    {
+        TransactionScript.getInstance().updatePersonName(oldName, newName);
+    }
+
+    @Override
+    public void updatePhone(String personName, String newPhone)
+    {
+        TransactionScript.getInstance().updatePersonPhone(personName, newPhone);
+    }
+
+    @Override
+    public void delete(String personName)
+    {
+        TransactionScript.getInstance().deletePerson(personName);
+    }
+
+    @Override
     public List<Person> list()
     {
         return TransactionScript.getInstance().listPersons();
@@ -72,12 +90,12 @@ public class JDBCStorageService implements StorageService
             } catch (Exception e)
             {
                 e.printStackTrace();
-            };
+            }
         }
 
         public List<Person> listPersons()
         {
-            List<Person> result = new ArrayList<>(10);
+            List<Person> result = new ArrayList<Person>(10);
 
             try
             {
@@ -103,7 +121,55 @@ public class JDBCStorageService implements StorageService
 
             return result;
         }
-
+        public void updatePersonName(String oldName, String newName)
+        {
+            try
+            {
+                PreparedStatement updateName = connection.prepareStatement(
+                        "update person set name = ? where name = ?");
+                updateName.setString(1, newName);
+                updateName.setString(2, oldName);
+                updateName.execute();
+            }
+            catch (Exception ex)
+            {
+                ex.printStackTrace();
+            }
+        }
+        public void updatePersonPhone(String personName, String newPhone)
+        {
+            try
+            {
+                PreparedStatement getPersonId = connection.prepareStatement(
+                        "select id from person where name = ?");
+                getPersonId.setString(1, personName);
+                ResultSet rs = getPersonId.executeQuery();
+                long id = rs.getLong(1);
+                PreparedStatement updatePhone = connection.prepareStatement(
+                        "update phone set phone = ? where person_id = ?");
+                updatePhone.setString(1, newPhone);
+                updatePhone.setLong(2, id);
+                updatePhone.execute();
+            }
+            catch(Exception ex)
+            {
+                ex.printStackTrace();
+            }
+        }
+        public void deletePerson(String personName)
+        {
+            try
+            {
+                PreparedStatement deletePerson = connection.prepareStatement(
+                    "delete from person where name = ?");
+                deletePerson.setString(1, personName);
+                deletePerson.execute();
+            }
+            catch(Exception ex)
+            {
+                ex.printStackTrace();
+            }
+        }
         public void addPerson(String person, String phone, Book book)
         {
             try

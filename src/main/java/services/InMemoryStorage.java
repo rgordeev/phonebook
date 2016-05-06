@@ -5,10 +5,7 @@ import model.Book;
 import model.Person;
 import model.Phone;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.List;
+import java.util.*;
 
 /**
  * (c) Roman Gordeev
@@ -27,6 +24,44 @@ public class InMemoryStorage implements StorageService
         book.getPersons().add(person);
     }
 
+    @Override
+    public void updateName(String oldName, String newName)
+    {
+        Set<Person> persons = defaultBook().getPersons();
+        for (Person p: persons) // persons with unique names?
+        {
+            if(p.getName().equalsIgnoreCase(oldName))
+            {
+                p.setName(newName);
+                break;
+            }
+        }
+    }
+
+    @Override
+    public void updatePhone(String personName, String newPhone)
+    {
+        Set<Person> persons = defaultBook().getPersons();
+        for (Person p: persons)
+        {
+            if(p.getName().equalsIgnoreCase(personName))
+            {
+                p.getPhones().clear();
+                p.getPhones().add(new Phone(p, newPhone)); //one person has one phone?
+            }
+        }
+    }
+
+    @Override
+    public void delete(String personName)
+    {
+        Set<Person> persons = defaultBook().getPersons();
+        for (Person p: persons)
+        {
+            persons.remove(p);
+            break;
+        }
+    }
     @Override
     public List<Person> list()
     {
