@@ -19,7 +19,7 @@ public class Phone
         this.phone = phone;
     }
 
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.REMOVE)
     public Person getPerson() {
         return person;
     }
