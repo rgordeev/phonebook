@@ -40,7 +40,7 @@ public class DBModule extends AbstractModule
     @Singleton
     public EntityManagerFactory getFactory()
     {
-        Map<String, String> props = new HashMap<>();
+        Map<String, String> props = new HashMap<String, String>();
 
         // настройки соединения
         props.put("hibernate.connection.url",           DBConnection.HIBERNATE.url());

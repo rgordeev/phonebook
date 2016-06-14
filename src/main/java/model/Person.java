@@ -18,7 +18,7 @@ public class Person
     public Person(String name)
     {
         this.name = name;
-        this.phones = new HashSet<>();
+        this.phones = new HashSet<Phone>();
     }
 
     public Person(String name, Set<Phone> phones) {
